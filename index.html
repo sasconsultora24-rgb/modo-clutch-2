@@ -614,7 +614,7 @@ function cd(from,cb){
 function playAll(){resetG();G.mode='all';show('rt1');}
 function playSingle(n){resetG();G.mode='single';G.single=n;show('rt'+n);}
 function resetGame(){resetG();show('splash');}
-function startRound(n){G.q=0;cd(3,()=>{show('r'+n);(['','nextQ1','nextQ2','nextQ3','nextQ4','nextQ5','nextQ6'])[n]();});}
+function startRound(n){G.q=0;cd(3,()=>{show('r'+n);window[['','nextQ1','nextQ2','nextQ3','nextQ4','nextQ5','nextQ6'][n]]();});}
 function afterRound(n){
   stopT();
   if(G.mode==='single'){buildSingle(n);show('res'+n);}
