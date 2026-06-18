@@ -204,7 +204,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 
 <div id="app">
 
-<!-- ══ SPLASH ══ -->
+<!-- = SPLASH = -->
 <div id="screen-splash" class="screen active">
   <span class="splash-icon">🏀</span>
   <div class="splash-v2">Versión 2.0</div>
@@ -261,7 +261,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   </div>
 </div>
 
-<!-- ══ ROUND TRANSITIONS ══ -->
+<!-- = ROUND TRANSITIONS = -->
 <div id="screen-rt1" class="screen"><div class="rt">
   <span class="rt-icon">⚡</span>
   <div class="rt-num">01</div><div class="rt-title">DECISIÓN NIVEL 2</div>
@@ -304,7 +304,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   <div style="text-align:center"><button class="btn btn-primary" onclick="startRound(6)">¡ARRANCAMOS!</button></div>
 </div></div>
 
-<!-- ══ RONDA 1 — Decisión Nivel 2 ══ -->
+<!-- = RONDA 1 — Decisión Nivel 2 = -->
 <div id="screen-r1" class="screen">
   <div class="prog-wrap">
     <div class="prog-top"><span class="tag tag-orange">R01 · Decisión Nivel 2</span><span id="r1c" style="font-family:var(--fc);font-size:.8rem;color:var(--white-dim)">1/15</span></div>
@@ -319,7 +319,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   <div id="r1o"></div>
 </div>
 
-<!-- ══ RONDA 2 — Fuego Real ══ -->
+<!-- = RONDA 2 — Fuego Real = -->
 <div id="screen-r2" class="screen">
   <div class="prog-wrap">
     <div class="prog-top"><span class="tag tag-orange">R02 · Fuego Real</span><span id="r2c" style="font-family:var(--fc);font-size:.8rem;color:var(--white-dim)">1/15</span></div>
@@ -335,7 +335,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   <div id="r2o"></div>
 </div>
 
-<!-- ══ RONDA 3 — Foco o Ruido ══ -->
+<!-- = RONDA 3 — Foco o Ruido = -->
 <div id="screen-r3" class="screen">
   <div class="prog-wrap">
     <div class="prog-top"><span class="tag tag-blue">R03 · Foco o Ruido</span><span id="r3c" style="font-family:var(--fc);font-size:.8rem;color:var(--white-dim)">1/12</span></div>
@@ -345,7 +345,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   <div class="focus-opts" id="r3o"></div>
 </div>
 
-<!-- ══ RONDA 4 — Semáforo 2.0 ══ -->
+<!-- = RONDA 4 — Semáforo 2.0 = -->
 <div id="screen-r4" class="screen">
   <div class="prog-wrap">
     <div class="prog-top"><span class="tag tag-orange">R04 · Semáforo 2.0</span><span id="r4c" style="font-family:var(--fc);font-size:.8rem;color:var(--white-dim)">1/20</span></div>
@@ -359,7 +359,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   </div>
 </div>
 
-<!-- ══ RONDA 5 — Anclas ══ -->
+<!-- = RONDA 5 — Anclas = -->
 <div id="screen-r5" class="screen">
   <div class="prog-wrap">
     <div class="prog-top"><span class="tag tag-purple">R05 · Anclas de Seguridad</span><span id="r5c" style="font-family:var(--fc);font-size:.8rem;color:var(--white-dim)">1/10</span></div>
@@ -369,7 +369,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   <div class="scale-wrap" id="r5o"></div>
 </div>
 
-<!-- ══ RONDA 6 — Elegí Ya 2.0 ══ -->
+<!-- = RONDA 6 — Elegí Ya 2.0 = -->
 <div id="screen-r6" class="screen">
   <div class="prog-wrap">
     <div class="prog-top"><span class="tag tag-orange">R06 · Elegí Ya 2.0</span><span id="r6c" style="font-family:var(--fc);font-size:.8rem;color:var(--white-dim)">1/12</span></div>
@@ -378,7 +378,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   <div id="r6dw"></div>
 </div>
 
-<!-- ══ RESULTADOS INDIVIDUALES ══ -->
+<!-- = RESULTADOS INDIVIDUALES = -->
 <div id="screen-res1" class="screen">
   <span class="res-icon">⚡</span><div class="res-title">R01 COMPLETA</div>
   <div class="res-badge">Decisión Nivel 2 · 15 preguntas · 4 seg</div>
@@ -445,7 +445,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   <div class="btn-row" id="rs6b"></div>
 </div>
 
-<!-- ══ REPORTE FINAL ══ -->
+<!-- = REPORTE FINAL = -->
 <div id="screen-final" class="screen">
   <span class="res-icon">🏆</span>
   <div class="res-title">REPORTE CLUTCH 2</div>
@@ -481,8 +481,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 </div>
 
 </div><!-- /app -->
-<script charset="utf-8">
-/* ════════ DATA ════════ */
+<script>
+/* = DATA = */
 const D = {
   r1:{ time:4, qs:[
     {q:"Tu entrenador te dice que hoy no sos titular. ¿Qué hacés primero?",a:["🤐 Me lo guardo y entreno","💬 Le pido una explicación","🔥 Demuestro en la práctica","😤 Me enojo en silencio"]},
@@ -582,7 +582,7 @@ const D = {
   ]}
 };
 
-/* ════════ STATE ════════ */
+/* = STATE = */
 let G={};
 function resetG(){
   G={mode:null,single:null,q:0,ti:null,qs:0,
@@ -592,14 +592,14 @@ function resetG(){
 }
 resetG();
 
-/* ════════ SCREENS ════════ */
+/* = SCREENS = */
 function show(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('screen-'+id).classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-/* ════════ COUNTDOWN ════════ */
+/* = COUNTDOWN = */
 function cd(from,cb){
   const ov=document.getElementById('cdOverlay'),ne=document.getElementById('cdNum');
   ov.classList.add('on'); let n=from; ne.textContent=n;
@@ -610,7 +610,7 @@ function cd(from,cb){
   },800);
 }
 
-/* ════════ FLOW ════════ */
+/* = FLOW = */
 function playAll(){resetG();G.mode='all';show('rt1');}
 function playSingle(n){resetG();G.mode='single';G.single=n;show('rt'+n);}
 function resetGame(){resetG();show('splash');}
@@ -621,7 +621,7 @@ function afterRound(n){
   else{n<6?show('rt'+(n+1)):buildFinal();}
 }
 
-/* ════════ TIMER ════════ */
+/* = TIMER = */
 function startT(sec,arcId,numId,pulseId,onEnd){
   stopT();
   const arc=document.getElementById(arcId),num=document.getElementById(numId),
@@ -641,7 +641,7 @@ function startT(sec,arcId,numId,pulseId,onEnd){
 function stopT(){clearInterval(G.ti);}
 function recT(rk){const e=(Date.now()-G.qs)/1000;G[rk].times.push(e);G[rk].dec++;}
 
-/* ════════ R1 ════════ */
+/* = R1 = */
 function nextQ1(){
   const qs=D.r1.qs; if(G.q>=qs.length){afterRound(1);return;}
   const q=qs[G.q],tot=qs.length;
@@ -654,7 +654,7 @@ function nextQ1(){
   startT(D.r1.time,'r1a','r1t','r1pu',()=>{recT('r1');G.q++;nextQ1();});
 }
 
-/* ════════ R2 ════════ */
+/* = R2 = */
 function nextQ2(){
   const qs=D.r2.qs; if(G.q>=qs.length){afterRound(2);return;}
   const q=qs[G.q],tot=qs.length;
@@ -669,7 +669,7 @@ function nextQ2(){
   startT(D.r2.time,'r2a','r2t','r2pu',()=>{recT('r2');G.q++;nextQ2();});
 }
 
-/* ════════ R3 ════════ */
+/* = R3 = */
 function nextQ3(){
   const qs=D.r3.qs; if(G.q>=qs.length){afterRound(3);return;}
   const q=qs[G.q],tot=qs.length;
@@ -693,7 +693,7 @@ function nextQ3(){
   G.qs=Date.now();
 }
 
-/* ════════ R4 ════════ */
+/* = R4 = */
 function nextQ4(){
   const qs=D.r4.qs; if(G.q>=qs.length){afterRound(4);return;}
   const tot=qs.length;
@@ -707,7 +707,7 @@ function ansSem(c){recT('r4');G.r4[c]++;G.q++;
   setTimeout(()=>{el.classList.remove('flash');nextQ4();},280);
 }
 
-/* ════════ R5 ════════ */
+/* = R5 = */
 function nextQ5(){
   const qs=D.r5.qs; if(G.q>=qs.length){afterRound(5);return;}
   const q=qs[G.q],tot=qs.length;
@@ -727,7 +727,7 @@ function nextQ5(){
   G.qs=Date.now();
 }
 
-/* ════════ R6 ════════ */
+/* = R6 = */
 function nextQ6(){
   const qs=D.r6.qs; if(G.q>=qs.length){afterRound(6);return;}
   const tot=qs.length,q=qs[G.q];
@@ -748,7 +748,7 @@ function nextQ6(){
   G.qs=Date.now();
 }
 
-/* ════════ STATS ════════ */
+/* = STATS = */
 function calcS(rk){
   const t=G[rk].times;
   if(!t.length)return{total:0,avg:'–',fast:0,slow:0};
