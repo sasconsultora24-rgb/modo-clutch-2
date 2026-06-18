@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏀 MODO CLUTCH 2</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap');
+:root {
+  --orange:#FF6B00;--orange-light:#FF8C38;--orange-glow:rgba(255,107,0,.35);
+  --black:#080808;--black-2:#101010;--black-3:#181818;--black-4:#202020;--black-5:#2A2A2A;
+  --white:#F0EDE8;--white-dim:rgba(240,237,232,.6);--white-faint:rgba(240,237,232,.25);
+  --blue:#1A5FD4;--blue-light:#4A8FFF;--blue-glow:rgba(26,95,212,.3);
+  --green:#00D46A;--green-dim:rgba(0,212,106,.15);--green-glow:rgba(0,212,106,.3);
+  --yellow:#FFD600;--yellow-dim:rgba(255,214,0,.12);--yellow-glow:rgba(255,214,0,.3);
+  --red:#FF3B3B;--red-dim:rgba(255,59,59,.13);--red-glow:rgba(255,59,59,.3);
+  --purple:#A855F7;--purple-dim:rgba(168,85,247,.12);
+  --fd:'Black Ops One',cursive;--fc:'Barlow Condensed',sans-serif;--fb:'Barlow',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;min-height:100%;background:var(--black);color:var(--white);font-family:var(--fb);overflow-x:hidden}
+
+/* ── BG ── */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% -5%, rgba(255,107,0,.1) 0%,transparent 55%),
+    radial-gradient(ellipse 50% 40% at 90% 100%, rgba(26,95,212,.07) 0%,transparent 55%),
+    radial-gradient(ellipse 40% 30% at 0% 60%, rgba(168,85,247,.05) 0%,transparent 50%),
+    repeating-linear-gradient(0deg,transparent,transparent 60px,rgba(255,255,255,.012) 60px,rgba(255,255,255,.012) 61px),
+    repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(255,255,255,.012) 60px,rgba(255,255,255,.012) 61px)}
+
+#app{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.screen{display:none;width:100%;max-width:740px;animation:fsIn .4s cubic-bezier(.22,.68,0,1.15) both}
+.screen.active{display:block}
+@keyframes fsIn{from{opacity:0;transform:translateY(28px) scale(.975)}to{opacity:1;transform:none}}
+
+/* ── SHARED ── */
+.divider{width:48px;height:3px;background:linear-gradient(90deg,var(--orange),transparent);border-radius:99px;margin:14px 0}
+.divider.center{margin-left:auto;margin-right:auto}
+.tag{display:inline-block;font-family:var(--fc);font-weight:700;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding:3px 10px;border-radius:4px}
+.tag-orange{background:rgba(255,107,0,.15);color:var(--orange);border:1px solid rgba(255,107,0,.3)}
+.tag-blue{background:rgba(26,95,212,.15);color:var(--blue-light);border:1px solid rgba(26,95,212,.3)}
+.tag-purple{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(168,85,247,.3)}
+
+/* ── PROGRESS ── */
+.prog-wrap{margin-bottom:16px}
+.prog-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.prog-bar{height:3px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--orange-light));border-radius:99px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+
+/* ── TIMER ── */
+.timer-wrap{display:flex;align-items:center;justify-content:center;margin:12px 0}
+.timer-ring{position:relative;width:76px;height:76px}
+.timer-svg{transform:rotate(-90deg)}
+.t-track{fill:none;stroke:rgba(255,255,255,.07);stroke-width:5}
+.t-arc{fill:none;stroke:var(--orange);stroke-width:5;stroke-linecap:round;stroke-dasharray:201;stroke-dashoffset:0;transition:stroke .25s}
+.t-arc.warn{stroke:var(--yellow)}.t-arc.danger{stroke:var(--red)}
+.t-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1.55rem}
+.pulse{position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--orange);animation:pulsate 1s ease-out infinite;opacity:0;display:none}
+@keyframes pulsate{0%{transform:scale(.88);opacity:.8}100%{transform:scale(1.45);opacity:0}}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:10px;font-family:var(--fc);font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:transform .15s,box-shadow .2s,filter .15s;position:relative;overflow:hidden;user-select:none}
+.btn:active{transform:scale(.95)!important}
+.btn-primary{background:var(--orange);color:#000;font-size:1.1rem;padding:16px 36px;box-shadow:0 4px 28px var(--orange-glow)}
+.btn-primary:hover{box-shadow:0 6px 36px rgba(255,107,0,.55);transform:translateY(-2px)}
+.btn-ghost{background:transparent;color:var(--white-dim);border:1px solid rgba(255,255,255,.14);font-size:.88rem;padding:10px 20px}
+.btn-ghost:hover{border-color:rgba(255,255,255,.35);color:var(--white)}
+.btn-answer{width:100%;background:var(--black-4);color:var(--white);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px 20px;font-size:.95rem;text-align:left;line-height:1.35;cursor:pointer;font-family:var(--fb);transition:background .2s,border-color .2s,transform .15s;margin-bottom:9px;text-transform:none;letter-spacing:0}
+.btn-answer:hover{background:rgba(255,107,0,.1);border-color:rgba(255,107,0,.5);transform:translateX(4px)}
+
+/* ── SEMÁFORO ── */
+.sem-wrap{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:18px}
+.btn-sem{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:18px 8px;border:2px solid;border-radius:14px;background:transparent;font-family:var(--fc);font-weight:900;font-size:.8rem;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;transition:transform .15s,box-shadow .2s,background .2s}
+.btn-sem span{font-size:1.7rem;line-height:1}
+.btn-sem:hover{transform:translateY(-3px)}
+.btn-sem:active{transform:scale(.94)}
+.bs-green{border-color:var(--green);color:var(--green)}.bs-green:hover{background:var(--green-dim);box-shadow:0 0 22px var(--green-glow)}
+.bs-yellow{border-color:var(--yellow);color:var(--yellow)}.bs-yellow:hover{background:var(--yellow-dim);box-shadow:0 0 22px var(--yellow-glow)}
+.bs-red{border-color:var(--red);color:var(--red)}.bs-red:hover{background:var(--red-dim);box-shadow:0 0 22px var(--red-glow)}
+
+/* ── DUELO ── */
+.duelo-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.btn-duelo{display:flex;align-items:center;justify-content:center;padding:26px 14px;border:2px solid rgba(255,255,255,.1);border-radius:14px;background:var(--black-4);color:var(--white);font-family:var(--fc);font-weight:900;font-size:1rem;letter-spacing:.03em;text-transform:uppercase;text-align:center;line-height:1.2;cursor:pointer;transition:all .2s}
+.btn-duelo:hover{background:rgba(255,107,0,.15);border-color:var(--orange);transform:scale(1.04);box-shadow:0 4px 24px var(--orange-glow)}
+.vs-badge{display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1.3rem;color:var(--orange);grid-column:1/-1;padding:6px 0}
+
+/* ── ANCLA / FOCO ── */
+.scale-wrap{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+.scale-btn{display:flex;align-items:center;gap:14px;padding:14px 18px;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:var(--black-4);cursor:pointer;transition:all .2s;text-align:left}
+.scale-btn:hover{border-color:var(--orange);background:rgba(255,107,0,.08);transform:translateX(5px)}
+.scale-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.9rem;flex-shrink:0}
+.scale-text{font-family:var(--fc);font-size:.95rem;color:var(--white);line-height:1.3}
+.scale-sub{font-size:.78rem;color:var(--white-dim);margin-top:2px}
+
+/* ── SPLASH ── */
+#screen-splash{text-align:center}
+.splash-icon{font-size:clamp(3.5rem,11vw,6.5rem);display:block;margin-bottom:10px;animation:bounce 2.2s ease-in-out infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.splash-v2{font-family:var(--fc);font-size:.85rem;letter-spacing:.25em;text-transform:uppercase;color:var(--orange);margin-bottom:4px}
+.splash-title{font-family:var(--fd);font-size:clamp(2.6rem,8vw,4.8rem);color:var(--white);line-height:1;margin-bottom:6px;text-shadow:0 0 60px rgba(255,107,0,.25)}
+.splash-sub{font-family:var(--fc);font-size:clamp(.95rem,3vw,1.15rem);color:var(--white-dim);letter-spacing:.04em;margin-bottom:28px;line-height:1.55}
+
+/* ── MENU ── */
+.menu-all{width:100%;background:linear-gradient(135deg,var(--orange),var(--orange-light));border:none;border-radius:14px;padding:18px 22px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;transition:box-shadow .2s,transform .15s}
+.menu-all:hover{box-shadow:0 8px 36px var(--orange-glow);transform:translateY(-2px)}
+.ma-name{font-family:var(--fd);font-size:1.15rem;color:#000;line-height:1}
+.ma-desc{font-family:var(--fc);font-size:.75rem;color:rgba(0,0,0,.6);letter-spacing:.06em;text-transform:uppercase;margin-top:3px}
+.ma-icon{font-size:1.8rem}
+.sec-label{font-family:var(--fc);font-size:.73rem;letter-spacing:.14em;text-transform:uppercase;color:var(--white-faint);margin-bottom:10px;margin-top:4px}
+.menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:0}
+.mc{background:var(--black-3);border:1px solid rgba(255,255,255,.07);border-radius:13px;padding:16px 14px;cursor:pointer;transition:border-color .2s,background .2s,transform .15s;text-align:left;position:relative;overflow:hidden}
+.mc:hover{border-color:rgba(255,107,0,.4);background:rgba(255,107,0,.05);transform:translateY(-2px)}
+.mc-num{font-family:var(--fd);font-size:1.7rem;color:var(--orange);line-height:1}
+.mc-name{font-family:var(--fc);font-weight:700;font-size:.88rem;letter-spacing:.05em;text-transform:uppercase;color:var(--white);margin-top:3px}
+.mc-desc{font-size:.72rem;color:var(--white-dim);margin-top:3px}
+.mc-badge{position:absolute;top:10px;right:10px;font-family:var(--fc);font-size:.65rem;background:rgba(255,107,0,.18);color:var(--orange);padding:2px 7px;border-radius:99px;border:1px solid rgba(255,107,0,.3);letter-spacing:.08em;text-transform:uppercase}
+.mc-badge.blue{background:rgba(74,143,255,.15);color:var(--blue-light);border-color:rgba(74,143,255,.3)}
+.mc-badge.purple{background:var(--purple-dim);color:var(--purple);border-color:rgba(168,85,247,.3)}
+
+/* ── ROUND TRANSITION ── */
+.rt{text-align:center}
+.rt-num{font-family:var(--fd);font-size:clamp(3.5rem,13vw,6.5rem);color:var(--orange);line-height:1;text-shadow:0 0 80px var(--orange-glow)}
+.rt-title{font-family:var(--fd);font-size:clamp(1.3rem,4.5vw,2.2rem);color:var(--white);margin-top:4px}
+.rt-sub{font-family:var(--fc);font-size:.95rem;letter-spacing:.1em;color:var(--white-dim);text-transform:uppercase;margin:10px 0 28px}
+.rt-icon{font-size:2.2rem;display:block;margin-bottom:6px}
+
+/* ── COUNTDOWN ── */
+#cdOverlay{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.9);align-items:center;justify-content:center;flex-direction:column;gap:10px}
+#cdOverlay.on{display:flex}
+.cd-num{font-family:var(--fd);font-size:clamp(5rem,18vw,9rem);color:var(--orange);animation:popIn .55s cubic-bezier(.17,.67,.4,1.4)}
+@keyframes popIn{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+.cd-sub{font-family:var(--fc);font-size:1rem;letter-spacing:.18em;text-transform:uppercase;color:var(--white-dim)}
+
+/* ── QUESTION ── */
+.q-text{font-family:var(--fc);font-weight:700;font-size:clamp(1.2rem,3.8vw,1.6rem);line-height:1.28;margin:16px 0 18px;color:var(--white)}
+.q-context{font-family:var(--fb);font-size:.85rem;color:var(--white-dim);background:rgba(255,107,0,.07);border-left:3px solid var(--orange);padding:8px 12px;border-radius:0 8px 8px 0;margin-bottom:14px;line-height:1.5}
+
+/* ── RESULT SCREENS ── */
+.res-icon{font-size:2.6rem;display:block;text-align:center;margin-bottom:6px}
+.res-title{font-family:var(--fd);font-size:clamp(1.5rem,5vw,2.3rem);color:var(--orange);text-align:center;margin-bottom:4px}
+.res-badge{background:rgba(255,107,0,.1);border:1px solid rgba(255,107,0,.22);border-radius:8px;padding:9px 14px;margin-bottom:14px;font-family:var(--fc);font-size:.8rem;letter-spacing:.07em;text-transform:uppercase;color:var(--orange)}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:16px 0}
+.stat-box{background:var(--black-5);border:1px solid rgba(255,255,255,.07);border-radius:11px;padding:14px 12px;text-align:center}
+.stat-num{font-family:var(--fd);font-size:2rem;color:var(--orange);line-height:1}
+.stat-lbl{font-family:var(--fc);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--white-dim);margin-top:3px}
+.sem-result{display:flex;gap:9px;justify-content:center;margin:14px 0}
+.sr{flex:1;background:var(--black-5);border-radius:11px;padding:13px 6px;text-align:center;border:2px solid transparent}
+.sr.g{border-color:var(--green)}.sr.y{border-color:var(--yellow)}.sr.r{border-color:var(--red)}
+.sr .e{font-size:1.4rem}.sr .c{font-family:var(--fd);font-size:1.7rem;color:var(--white)}.sr .n{font-family:var(--fc);font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:var(--white-dim)}
+.rfx-title{font-family:var(--fc);font-weight:900;font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin:18px 0 10px}
+.rfx-q{display:flex;gap:10px;align-items:flex-start;padding:11px 13px;background:var(--black-5);border-radius:9px;margin-bottom:7px;border-left:3px solid var(--orange)}
+.rfx-q .d{width:6px;height:6px;border-radius:50%;background:var(--orange);margin-top:7px;flex-shrink:0}
+.rfx-q p{font-size:.88rem;color:var(--white-dim);line-height:1.5}
+.btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+
+/* ── FINAL TABS ── */
+.tabs{display:flex;gap:5px;margin-bottom:16px;background:var(--black-4);padding:4px;border-radius:10px;flex-wrap:wrap}
+.tab{flex:1;min-width:48px;padding:8px 6px;border:none;border-radius:7px;background:transparent;color:var(--white-dim);font-family:var(--fc);font-weight:700;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:background .2s,color .2s}
+.tab.active{background:var(--orange);color:#000}
+
+/* ── ANCLA SCREEN specifics ── */
+.ancla-card{background:var(--black-3);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:20px}
+.ancla-title{font-family:var(--fd);font-size:1.1rem;color:var(--white);margin-bottom:6px}
+.ancla-sub{font-size:.85rem;color:var(--white-dim);line-height:1.5;margin-bottom:16px}
+
+/* ── FOCUS MAP ── */
+.focus-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.focus-opt{padding:18px 14px;border:2px solid rgba(255,255,255,.09);border-radius:13px;background:var(--black-4);cursor:pointer;text-align:center;transition:all .2s}
+.focus-opt:hover{border-color:var(--blue-light);background:rgba(74,143,255,.08);transform:scale(1.03)}
+.focus-opt .fo-icon{font-size:1.8rem;margin-bottom:6px}
+.focus-opt .fo-text{font-family:var(--fc);font-weight:700;font-size:.88rem;letter-spacing:.04em;text-transform:uppercase;color:var(--white)}
+.focus-opt .fo-sub{font-size:.72rem;color:var(--white-dim);margin-top:3px}
+
+/* ── CONFIANZA BUILDER ── */
+.conf-meter{margin:18px 0}
+.conf-label{font-family:var(--fc);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--white-dim);margin-bottom:8px}
+.conf-bar-wrap{height:8px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-bottom:12px}
+.conf-bar-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--orange));border-radius:99px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+
+/* ── FLASH ── */
+@keyframes flash{0%{opacity:1}40%{opacity:.25}100%{opacity:1}}
+.flash{animation:flash .28s ease}
+
+/* ── MOBILE ── */
+@media(max-width:480px){
+  .duelo-grid{grid-template-columns:1fr}
+  .menu-grid{grid-template-columns:1fr}
+  .focus-opts{grid-template-columns:1fr}
+  .sem-wrap{gap:7px}
+  .btn-sem span{font-size:1.4rem}
+  .btn-row{flex-direction:column;align-items:center}
+  .tabs{gap:3px}
+  .tab{font-size:.7rem;padding:7px 4px}
+}
+</style>
+</head>
+<body>
+
+<div id="cdOverlay">
+  <div class="cd-num" id="cdNum">3</div>
+  <div class="cd-sub">Preparate</div>
+</div>
+
+<div id="app">
+
+<!-- ══ SPLASH ══ -->
+<div id="screen-splash" class="screen active">
+  <span class="splash-icon">🏀</span>
+  <div class="splash-v2">Versión 2.0</div>
+  <h1 class="splash-title">MODO CLUTCH 2</h1>
+  <div class="divider center"></div>
+  <p class="splash-sub">Más presión. Más profundidad.<br>¿Conocés tu juego mental?</p>
+
+  <button class="menu-all" onclick="playAll()">
+    <div style="text-align:left">
+      <div class="ma-name">JUGAR TODO JUNTO</div>
+      <div class="ma-desc">Las 6 rondas completas</div>
+    </div>
+    <div class="ma-icon">🔥</div>
+  </button>
+
+  <div class="sec-label">— O elegí una ronda —</div>
+  <div class="menu-grid">
+    <div class="mc" onclick="playSingle(1)">
+      <div class="mc-badge">4 seg</div>
+      <div class="mc-num">01</div>
+      <div class="mc-name">Decisión Nivel 2</div>
+      <div class="mc-desc">Dilemas más complejos</div>
+    </div>
+    <div class="mc" onclick="playSingle(2)">
+      <div class="mc-badge">5 seg</div>
+      <div class="mc-num">02</div>
+      <div class="mc-name">Fuego Real</div>
+      <div class="mc-desc">Situaciones extremas</div>
+    </div>
+    <div class="mc" onclick="playSingle(3)">
+      <div class="mc-badge blue">Nuevo</div>
+      <div class="mc-num">03</div>
+      <div class="mc-name">Foco o Ruido</div>
+      <div class="mc-desc">¿Dónde va tu atención?</div>
+    </div>
+    <div class="mc" onclick="playSingle(4)">
+      <div class="mc-badge blue">Nuevo</div>
+      <div class="mc-num">04</div>
+      <div class="mc-name">Semáforo 2.0</div>
+      <div class="mc-desc">Hábitos de élite</div>
+    </div>
+    <div class="mc" onclick="playSingle(5)">
+      <div class="mc-badge purple">Nuevo</div>
+      <div class="mc-num">05</div>
+      <div class="mc-name">Anclas de Seguridad</div>
+      <div class="mc-desc">Tu escudo mental</div>
+    </div>
+    <div class="mc" onclick="playSingle(6)">
+      <div class="mc-badge">Sin tiempo</div>
+      <div class="mc-num">06</div>
+      <div class="mc-name">Elegí Ya 2.0</div>
+      <div class="mc-desc">Duelos de mentalidad</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ROUND TRANSITIONS ══ -->
+<div id="screen-rt1" class="screen"><div class="rt">
+  <span class="rt-icon">⚡</span>
+  <div class="rt-num">01</div><div class="rt-title">DECISIÓN NIVEL 2</div>
+  <div class="rt-sub">4 segundos · dilemas más complejos</div>
+  <div style="text-align:center"><button class="btn btn-primary" onclick="startRound(1)">¡ARRANCAMOS!</button></div>
+</div></div>
+
+<div id="screen-rt2" class="screen"><div class="rt">
+  <span class="rt-icon">🔥</span>
+  <div class="rt-num">02</div><div class="rt-title">FUEGO REAL</div>
+  <div class="rt-sub">5 segundos · situaciones extremas</div>
+  <div style="text-align:center"><button class="btn btn-primary" onclick="startRound(2)">¡ARRANCAMOS!</button></div>
+</div></div>
+
+<div id="screen-rt3" class="screen"><div class="rt">
+  <span class="rt-icon">🎯</span>
+  <div class="rt-num">03</div><div class="rt-title">FOCO O RUIDO</div>
+  <div class="rt-sub">¿Dónde va tu atención bajo presión?</div>
+  <div style="text-align:center"><button class="btn btn-primary" onclick="startRound(3)">¡ARRANCAMOS!</button></div>
+</div></div>
+
+<div id="screen-rt4" class="screen"><div class="rt">
+  <span class="rt-icon">🚦</span>
+  <div class="rt-num">04</div><div class="rt-title">SEMÁFORO 2.0</div>
+  <div class="rt-sub">Hábitos de élite · ¿cuántos tenés?</div>
+  <div style="text-align:center"><button class="btn btn-primary" onclick="startRound(4)">¡ARRANCAMOS!</button></div>
+</div></div>
+
+<div id="screen-rt5" class="screen"><div class="rt">
+  <span class="rt-icon">⚓</span>
+  <div class="rt-num">05</div><div class="rt-title">ANCLAS DE SEGURIDAD</div>
+  <div class="rt-sub">Encontrá tu escudo mental</div>
+  <div style="text-align:center"><button class="btn btn-primary" onclick="startRound(5)">¡ARRANCAMOS!</button></div>
+</div></div>
+
+<div id="screen-rt6" class="screen"><div class="rt">
+  <span class="rt-icon">⚔️</span>
+  <div class="rt-num">06</div><div class="rt-title">ELEGÍ YA 2.0</div>
+  <div class="rt-sub">Sin tiempo para pensar</div>
+  <div style="text-align:center"><button class="btn btn-primary" onclick="startRound(6)">¡ARRANCAMOS!</button></div>
+</div></div>
+
+<!-- ══ RONDA 1 — Decisión Nivel 2 ══ -->
+<div id="screen-r1" class="screen">
+  <div class="prog-wrap">
+    <div class="prog-top"><span class="tag tag-orange">R01 · Decisión Nivel 2</span><span id="r1c" style="font-family:var(--fc);font-size:.8rem;color:var(--white-dim)">1/15</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="r1p" style="width:0%"></div></div>
+  </div>
+  <div class="timer-wrap"><div class="timer-ring">
+    <div class="pulse" id="r1pu"></div>
+    <svg class="timer-svg" width="76" height="76" viewBox="0 0 76 76"><circle class="t-track" cx="38" cy="38" r="32"/><circle class="t-arc" id="r1a" cx="38" cy="38" r="32"/></svg>
+    <div class="t-num" id="r1t">4</div>
+  </div></div>
+  <p class="q-text" id="r1q"></p>
+  <div id="r1o"></div>
+</div>
+
+<!-- ══ RONDA 2 — Fuego Real ══ -->
+<div id="screen-r2" class="screen">
+  <div class="prog-wrap">
+    <div class="prog-top"><span class="tag tag-orange">R02 · Fuego Real</span><span id="r2c" style="font-family:var(--fc);font-size:.8rem;color:var(--white-dim)">1/15</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="r2p" style="width:0%"></div></div>
+  </div>
+  <div class="timer-wrap"><div class="timer-ring">
+    <div class="pulse" id="r2pu"></div>
+    <svg class="timer-svg" width="76" height="76" viewBox="0 0 76 76"><circle class="t-track" cx="38" cy="38" r="32"/><circle class="t-arc" id="r2a" cx="38" cy="38" r="32"/></svg>
+    <div class="t-num" id="r2t">5</div>
+  </div></div>
+  <div class="q-context" id="r2ctx" style="display:none"></div>
+  <p class="q-text" id="r2q"></p>
+  <div id="r2o"></div>
+</div>
+
+<!-- ══ RONDA 3 — Foco o Ruido ══ -->
+<div id="screen-r3" class="screen">
+  <div class="prog-wrap">
+    <div class="prog-top"><span class="tag tag-blue">R03 · Foco o Ruido</span><span id="r3c" style="font-family:var(--fc);font-size:.8rem;color:var(--white-dim)">1/12</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="r3p" style="width:0%"></div></div>
+  </div>
+  <p class="q-text" id="r3q"></p>
+  <div class="focus-opts" id="r3o"></div>
+</div>
+
+<!-- ══ RONDA 4 — Semáforo 2.0 ══ -->
+<div id="screen-r4" class="screen">
+  <div class="prog-wrap">
+    <div class="prog-top"><span class="tag tag-orange">R04 · Semáforo 2.0</span><span id="r4c" style="font-family:var(--fc);font-size:.8rem;color:var(--white-dim)">1/20</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="r4p" style="width:0%"></div></div>
+  </div>
+  <p class="q-text" id="r4q"></p>
+  <div class="sem-wrap">
+    <button class="btn-sem bs-green"  onclick="ansSem('green')"><span>🟢</span>LO HARÍA</button>
+    <button class="btn-sem bs-yellow" onclick="ansSem('yellow')"><span>🟡</span>LO PENSARÍA</button>
+    <button class="btn-sem bs-red"    onclick="ansSem('red')"><span>🔴</span>NO LO HARÍA</button>
+  </div>
+</div>
+
+<!-- ══ RONDA 5 — Anclas ══ -->
+<div id="screen-r5" class="screen">
+  <div class="prog-wrap">
+    <div class="prog-top"><span class="tag tag-purple">R05 · Anclas de Seguridad</span><span id="r5c" style="font-family:var(--fc);font-size:.8rem;color:var(--white-dim)">1/10</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="r5p" style="width:0%"></div></div>
+  </div>
+  <p class="q-text" id="r5q"></p>
+  <div class="scale-wrap" id="r5o"></div>
+</div>
+
+<!-- ══ RONDA 6 — Elegí Ya 2.0 ══ -->
+<div id="screen-r6" class="screen">
+  <div class="prog-wrap">
+    <div class="prog-top"><span class="tag tag-orange">R06 · Elegí Ya 2.0</span><span id="r6c" style="font-family:var(--fc);font-size:.8rem;color:var(--white-dim)">1/12</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="r6p" style="width:0%"></div></div>
+  </div>
+  <div id="r6dw"></div>
+</div>
+
+<!-- ══ RESULTADOS INDIVIDUALES ══ -->
+<div id="screen-res1" class="screen">
+  <span class="res-icon">⚡</span><div class="res-title">R01 COMPLETA</div>
+  <div class="res-badge">Decisión Nivel 2 · 15 preguntas · 4 seg</div>
+  <div class="divider center"></div>
+  <div class="stats-grid" id="rs1s"></div>
+  <div class="rfx-title">🧠 Para reflexionar</div>
+  <div class="rfx-q"><div class="d"></div><p>¿Qué dilemas te resultaron más difíciles?</p></div>
+  <div class="rfx-q"><div class="d"></div><p>¿Notaste algún patrón en tus decisiones?</p></div>
+  <div class="btn-row" id="rs1b"></div>
+</div>
+
+<div id="screen-res2" class="screen">
+  <span class="res-icon">🔥</span><div class="res-title">R02 COMPLETA</div>
+  <div class="res-badge">Fuego Real · 15 situaciones · 5 seg</div>
+  <div class="divider center"></div>
+  <div class="stats-grid" id="rs2s"></div>
+  <div class="rfx-title">🧠 Para reflexionar</div>
+  <div class="rfx-q"><div class="d"></div><p>¿Qué situación te generó más tensión?</p></div>
+  <div class="rfx-q"><div class="d"></div><p>¿Cuándo fue más fácil decidir bajo presión?</p></div>
+  <div class="btn-row" id="rs2b"></div>
+</div>
+
+<div id="screen-res3" class="screen">
+  <span class="res-icon">🎯</span><div class="res-title">R03 COMPLETA</div>
+  <div class="res-badge">Foco o Ruido · 12 situaciones</div>
+  <div class="divider center"></div>
+  <div class="stats-grid" id="rs3s"></div>
+  <div class="rfx-title">🧠 Para reflexionar</div>
+  <div class="rfx-q"><div class="d"></div><p>¿Cuándo te resultó más fácil mantener el foco?</p></div>
+  <div class="rfx-q"><div class="d"></div><p>¿Qué tipos de "ruido" te afectan más?</p></div>
+  <div class="btn-row" id="rs3b"></div>
+</div>
+
+<div id="screen-res4" class="screen">
+  <span class="res-icon">🚦</span><div class="res-title">R04 COMPLETA</div>
+  <div class="res-badge">Semáforo 2.0 · 20 hábitos de élite</div>
+  <div class="divider center"></div>
+  <div class="sem-result" id="rs4sem"></div>
+  <div class="rfx-title">🧠 Para reflexionar</div>
+  <div class="rfx-q"><div class="d"></div><p>¿Qué hábitos de élite ya tenés incorporados?</p></div>
+  <div class="rfx-q"><div class="d"></div><p>¿Cuál sería el primero que empezarías a trabajar?</p></div>
+  <div class="btn-row" id="rs4b"></div>
+</div>
+
+<div id="screen-res5" class="screen">
+  <span class="res-icon">⚓</span><div class="res-title">R05 COMPLETA</div>
+  <div class="res-badge">Anclas de Seguridad · 10 situaciones</div>
+  <div class="divider center"></div>
+  <div class="stats-grid" id="rs5s"></div>
+  <div class="rfx-title">🧠 Para reflexionar</div>
+  <div class="rfx-q"><div class="d"></div><p>¿Cuál es tu ancla más poderosa?</p></div>
+  <div class="rfx-q"><div class="d"></div><p>¿Qué recursos mentales ya usás sin darte cuenta?</p></div>
+  <div class="btn-row" id="rs5b"></div>
+</div>
+
+<div id="screen-res6" class="screen">
+  <span class="res-icon">⚔️</span><div class="res-title">R06 COMPLETA</div>
+  <div class="res-badge">Elegí Ya 2.0 · 12 duelos</div>
+  <div class="divider center"></div>
+  <div class="stats-grid" id="rs6s"></div>
+  <div class="rfx-title">🧠 Para reflexionar</div>
+  <div class="rfx-q"><div class="d"></div><p>¿Qué duelo fue el más difícil de resolver?</p></div>
+  <div class="rfx-q"><div class="d"></div><p>¿Qué dice de vos lo que priorizaste?</p></div>
+  <div class="btn-row" id="rs6b"></div>
+</div>
+
+<!-- ══ REPORTE FINAL ══ -->
+<div id="screen-final" class="screen">
+  <span class="res-icon">🏆</span>
+  <div class="res-title">REPORTE CLUTCH 2</div>
+  <div class="divider center"></div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('g')">General</button>
+    <button class="tab" onclick="switchTab('r1')">R01</button>
+    <button class="tab" onclick="switchTab('r2')">R02</button>
+    <button class="tab" onclick="switchTab('r3')">R03</button>
+    <button class="tab" onclick="switchTab('r4')">R04</button>
+    <button class="tab" onclick="switchTab('r5')">R05</button>
+    <button class="tab" onclick="switchTab('r6')">R06</button>
+  </div>
+  <div id="tab-g">
+    <div class="stats-grid" id="fg"></div>
+    <div class="sem-result" id="fsem"></div>
+  </div>
+  <div id="tab-r1" style="display:none"><div class="res-badge">Decisión Nivel 2</div><div class="stats-grid" id="fr1"></div></div>
+  <div id="tab-r2" style="display:none"><div class="res-badge">Fuego Real</div><div class="stats-grid" id="fr2"></div></div>
+  <div id="tab-r3" style="display:none"><div class="res-badge">Foco o Ruido</div><div class="stats-grid" id="fr3"></div></div>
+  <div id="tab-r4" style="display:none"><div class="res-badge">Semáforo 2.0</div><div class="sem-result" id="fr4"></div></div>
+  <div id="tab-r5" style="display:none"><div class="res-badge">Anclas de Seguridad</div><div class="stats-grid" id="fr5"></div></div>
+  <div id="tab-r6" style="display:none"><div class="res-badge">Elegí Ya 2.0</div><div class="stats-grid" id="fr6"></div></div>
+
+  <div class="rfx-title">🧠 Preguntas de Reflexión Final</div>
+  <div class="rfx-q"><div class="d"></div><p>¿En qué ronda sentiste que te conocés mejor?</p></div>
+  <div class="rfx-q"><div class="d"></div><p>¿Qué descubriste que no sabías de vos?</p></div>
+  <div class="rfx-q"><div class="d"></div><p>¿Qué ancla mental querés desarrollar primero?</p></div>
+  <div class="rfx-q"><div class="d"></div><p>¿Cómo querés que sea tu próximo partido?</p></div>
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="resetGame()">🔄 VOLVER A JUGAR</button>
+  </div>
+</div>
+
+</div><!-- /app -->
+<script>
+/* ════════ DATA ════════ */
+const D = {
+  r1:{ time:4, qs:[
+    {q:"Tu entrenador te dice que hoy no sos titular. ¿Qué hacés primero?",a:["🤐 Me lo guardo y entreno","💬 Le pido una explicación","🔥 Demuestro en la práctica","😤 Me enojo en silencio"]},
+    {q:"Ganás en zona de confort o perdés compitiendo contra los mejores. ¿Qué elegís?",a:["🏆 Ganar en zona de confort","🔥 Perder contra los mejores"]},
+    {q:"¿Qué vale más en el deporte de élite?",a:["🧠 Mentalidad inquebrantable","🏋️ Físico excepcional","🎯 Técnica perfecta","🤝 Inteligencia colectiva"]},
+    {q:"Tenés que elegir: ser el mejor del equipo o que el equipo sea el mejor.",a:["⭐ Ser el mejor del equipo","🏆 Que el equipo sea el mejor"]},
+    {q:"¿Qué hacés con el miedo antes de un partido importante?",a:["🔄 Lo transformo en energía","🤐 Lo ignoro y foco","💬 Lo hablo con alguien","🧘 Respiro y me centro"]},
+    {q:"Tu compañero comete el mismo error tres veces seguidas. ¿Cómo reaccionás?",a:["😶 No digo nada","💬 Lo aliento en silencio","🗣 Le digo algo constructivo","🤔 Espero que el coach lo maneje"]},
+    {q:"¿Preferís un entrenador que te conoce pero te exige poco, o uno que no te conoce pero te lleva al límite?",a:["😊 Me conoce, exige poco","🔥 No me conoce, me lleva al límite"]},
+    {q:"Erraste tres tiros libres clave. Quedan 10 segundos. Te dan la pelota. ¿Qué sentís?",a:["💪 Hambre de revancha","😰 Dudas pero afronto","🎯 Pura concentración","🙏 Esperanza"]},
+    {q:"¿Qué define más a un gran deportista?",a:["📈 Cómo responde al fracaso","🏅 Qué hace al ganar","⏰ Cómo entrena cada día","🧠 Cómo maneja la presión"]},
+    {q:"Tu rendimiento baja cuando estás cansado. ¿Qué priorizás?",a:["😴 Descanso, siempre","🔥 Sigo entrenando","🧠 Trabajo lo mental","⚖️ Equilibro ambas"]},
+    {q:"¿Cuándo aprendés más?",a:["✅ Cuando gano","❌ Cuando pierdo","😐 Cuando empato","🤔 Cuando me equivoco en práctica"]},
+    {q:"Tenés que elegir entre ser rápido para aprender o ser profundo para aprender.",a:["⚡ Rápido para aprender","🌊 Profundo para aprender"]},
+    {q:"¿Qué es más difícil de controlar en un partido?",a:["😤 Las emociones propias","🗣 Las provocaciones externas","❌ Los errores técnicos","🧠 Los pensamientos negativos"]},
+    {q:"¿Qué hacés el día después de una derrota dolorosa?",a:["📹 Veo el video","🏃 Entreno más duro","💬 Lo hablo","📓 Lo escribo y lo proceso"]},
+    {q:"Concentración total o libertad creativa: ¿qué te hace jugar mejor?",a:["🎯 Concentración total","🎨 Libertad creativa"]},
+  ]},
+  r2:{ time:5, qs:[
+    {ctx:"Final de torneo. Tu equipo pierde por 2 puntos. 30 segundos.",q:"El base te grita que no te movés bien. ¿Qué hacés?",a:["🎯 Foco en la jugada","💬 Le respondo rápido","😶 Lo ignoro","🔄 Ajusto mi movimiento"]},
+    {ctx:"Llevas 3 partidos sin anotar.",q:"Tu familia viene a verte hoy. ¿Eso te ayuda o te presiona?",a:["💪 Me ayuda, juego para ellos","😰 Me presiona, quiero quedar bien","😶 No cambia nada","🧘 Lo uso como motivación"]},
+    {ctx:"El árbitro está siendo muy permisivo con el rival.",q:"Tu capitán te dice que te quedes callado. ¿Lo obedecés?",a:["✅ Sí, confío en el capitán","❌ No, defiendo lo que creo","🤔 Depende de la situación","😶 Me quedo callado pero incómodo"]},
+    {ctx:"Están empatados. Quedan 2 minutos.",q:"El técnico pide tiempo y cambia la jugada que venía funcionando. ¿Tu reacción?",a:["✅ Confío ciegamente","💬 Le pregunto el porqué","🔥 La ejecuto con todo","😤 No estoy de acuerdo pero la hago"]},
+    {ctx:"Venís de perder 4 partidos seguidos.",q:"El vestuario está en silencio. ¿Quién hablás primero?",a:["🗣 Yo, necesito decir algo","😶 Espero que hable el coach","🤝 Busco a un compañero clave","📓 Lo proceso solo"]},
+    {ctx:"Estás en tu mejor momento del torneo.",q:"Te llaman para jugar en una posición que no es la tuya. ¿Cómo lo tomás?",a:["✅ Lo acepto, confío","🤔 Lo cuestiono antes","🔥 Lo uso como desafío","😤 Me incomoda pero juego"]},
+    {ctx:"Primer cuarto: erraste todo.",q:"Tu cuerpo dice parar. Tu cabeza dice seguir. ¿A quién escuchás?",a:["🏃 A mi cuerpo","🧠 A mi cabeza","⚖️ Busco el equilibrio","💬 Le pregunto al coach"]},
+    {ctx:"El partido más importante del año.",q:"Antes de salir a la cancha sentís que 'no es tu día'. ¿Qué hacés?",a:["🎯 Igual me concentro y salgo","💬 Se lo digo al coach","🧘 Encuentro mi ancla mental","🔥 Uso esa tensión como combustible"]},
+    {ctx:"Tu equipo va ganando cómodo.",q:"Empezás a bajar la intensidad. ¿Qué te dice tu voz interior?",a:["🔥 'No bajes nunca'","😊 'Está bien, ya está'","🤔 'Cuidado, puede cambiar'","🎯 'Mantené el nivel'"]},
+    {ctx:"Una lesión menor te duele.",q:"El médico dice que podés jugar pero con riesgo. ¿Qué decidís?",a:["💪 Juego, el equipo me necesita","😔 No juego, no vale la pena","💬 Hablo con el coach primero","🤔 Evalúo en el calentamiento"]},
+    {ctx:"Metiste el tiro ganador la semana pasada.",q:"Hoy te boicotea el pensamiento: '¿Y si no la meto?' ¿Cómo lo manejás?",a:["🧘 Respiro y reseteo","🎯 Foco en la técnica","💪 Recuerdo la última que metí","😤 Lo ignoro y ejecuto"]},
+    {ctx:"Tu rival de toda la vida juega en el equipo contrario.",q:"Te provoca antes del partido. ¿Eso te activa o te desconcentra?",a:["🔥 Me activa totalmente","😤 Me desconcentra un poco","😶 No me afecta","🎯 Lo uso como motivación"]},
+    {ctx:"Tercer cuarto. Estás cansado y el partido está parejo.",q:"El coach te mira esperando que des un paso adelante. ¿Lo hacés?",a:["💪 Sí, siempre","🤔 Depende de cómo me sienta","😶 Espero que me pida él","🔥 Saco reservas que no sabía que tenía"]},
+    {ctx:"Tu mejor amigo del equipo está en racha y vos no.",q:"¿Qué sentís por dentro?",a:["😊 Alegría genuina","😔 Algo de envidia, lo reconozco","🤔 Mezcla de las dos","🔥 Me motiva a mejorar"]},
+    {ctx:"Último partido de la temporada.",q:"Sabés que el año que viene podés no estar en este equipo. ¿Eso cómo te afecta hoy?",a:["🔥 Me hace jugar mejor","😔 Me distrae un poco","😶 No pienso en eso ahora","🎯 Foco solo en este partido"]},
+  ]},
+  r3:{ qs:[
+    {q:"Estás en la línea de tiro libre. Las tribunas hacen ruido. ¿Tu atención va...?",opts:[{icon:"🎯",t:"Al aro",s:"Foco externo preciso"},{icon:"🧠",t:"A mi rutina",s:"Foco interno"},{icon:"👂",t:"Al ruido",s:"Distracción"},{icon:"💭",t:"A lo que puede pasar",s:"Pensamiento futuro"}]},
+    {q:"Tu rival acaba de hacer un gran jugada contra vos. ¿Tu mente va...?",opts:[{icon:"🔄",t:"A la siguiente jugada",s:"Reset inmediato"},{icon:"😤",t:"A la bronca",s:"Emoción reactiva"},{icon:"🤔",t:"A entender qué pasó",s:"Análisis"},{icon:"😶",t:"A ningún lado, se congela",s:"Bloqueo mental"}]},
+    {q:"El entrenador te critica en el tiempo muerto. ¿Tu foco va...?",opts:[{icon:"📌",t:"A corregir lo que dijo",s:"Receptivo y ejecutivo"},{icon:"😤",t:"A defenderme",s:"Ego activado"},{icon:"😳",t:"A lo que pensarán otros",s:"Imagen social"},{icon:"🧘",t:"A mantenerme calmo",s:"Autorregulación"}]},
+    {q:"Vas perdiendo por 15 puntos. Tu concentración...?",opts:[{icon:"🔥",t:"Se intensifica",s:"Foco bajo presión"},{icon:"📉",t:"Baja naturalmente",s:"Dificultad de sostener"},{icon:"🎯",t:"Se focaliza en lo básico",s:"Simplificación"},{icon:"💭",t:"Se va al resultado final",s:"Anticipación"]},
+    {q:"Antes de un tiro clave, ¿qué pensás?",opts:[{icon:"🎯",t:"Nada, solo ejecuto",s:"Modo automático"},{icon:"📋",t:"En la técnica paso a paso",s:"Control consciente"},{icon:"💪",t:"En que puedo hacerlo",s:"Confianza"},{icon:"😰",t:"En lo que pasa si fallo",s:"Miedo al error"}]},
+    {q:"Tu equipo comete un error táctico grave. ¿Adónde va tu atención?",opts:[{icon:"🔄",t:"A la siguiente jugada ya",s:"Presente inmediato"},{icon:"😤",t:"Al error que acaba de pasar",s:"Pasado reciente"},{icon:"🤝",t:"A levantar al compañero",s:"Foco colectivo"},{icon:"🎯",t:"A ajustar mi juego",s:"Responsabilidad individual"}]},
+    {q:"En un partido muy importante, ¿cuándo perdés más el foco?",opts:[{icon:"😤",t:"Cuando me provoca un rival",s:"Estímulos externos"},{icon:"❌",t:"Cuando cometo errores",s:"Auto-crítica"},{icon:"📉",t:"Cuando el equipo baja",s:"Energía grupal"},{icon:"😰",t:"Cuando siento que hay mucho en juego",s:"Presión de la importancia"}]},
+    {q:"¿Cuál de estas 'voces internas' aparece más en tus partidos?",opts:[{icon:"😤",t:"'No puedo creer que erré'",s:"Autocrítica"},{icon:"💪",t:"'Vamos, lo puedo'",s:"Autoconfianza"},{icon:"😰",t:"'¿Y si no alcanza?'",s:"Duda anticipatoria"},{icon:"😶",t:"No hay voz, estoy en modo flow",s:"Estado de flow"}]},
+    {q:"Cuándo jugás tu mejor básquet, tu mente está...?",opts:[{icon:"🌊",t:"Vacía, en flow total",s:"Estado óptimo"},{icon:"🎯",t:"Muy enfocada en cada detalle",s:"Hiperconcentración"},{icon:"😊",t:"Relajada y confiada",s:"Calma activa"},{icon:"🔥",t:"Activada y muy alerta",s:"Alta activación"}]},
+    {q:"¿Qué tipo de 'ruido' te cuesta más ignorar?",opts:[{icon:"🗣",t:"Los gritos del público",s:"Ruido externo físico"},{icon:"💭",t:"Mis propios pensamientos negativos",s:"Ruido interno"},{icon:"👀",t:"Lo que hace el rival",s:"Distracción táctica"},{icon:"😤",t:"Los errores de mis compañeros",s:"Ruido emocional externo"}]},
+    {q:"Después de un error, ¿cuánto tarda tu mente en volver al presente?",opts:[{icon:"⚡",t:"Casi instantáneo",s:"Reset rápido"},{icon:"🕐",t:"Una o dos jugadas",s:"Reset normal"},{icon:"⏱",t:"Varios minutos",s:"Cuesta volver"},{icon:"😔",t:"A veces no vuelvo",s:"Dificultad de soltar"}]},
+    {q:"¿Cuándo sentís que estás más 'en el partido'?",opts:[{icon:"🔥",t:"Cuando el partido aprieta",s:"Foco competitivo"},{icon:"🌊",t:"Cuando el juego fluye solo",s:"Estado de flow"},{icon:"💪",t:"Cuando siento que soy clave",s:"Rol protagónico"},{icon:"🤝",t:"Cuando el equipo está unido",s:"Cohesión grupal"}]},
+  ]},
+  r4:{ qs:[
+    "Visualizo el partido antes de jugarlo.",
+    "Tengo una rutina pre-partido fija.",
+    "Cuando cometo un error, lo suelto en menos de 10 segundos.",
+    "Me hablo positivo durante el partido.",
+    "Cuido mi sueño como parte del entrenamiento.",
+    "Estudio a mis rivales antes de enfrentarlos.",
+    "Pido feedback aunque duela escucharlo.",
+    "Llevo un diario de rendimiento.",
+    "Practico la respiración como herramienta de regulación.",
+    "Cuando perdemos, busco mi parte de responsabilidad.",
+    "Entreno con la misma intensidad siempre, no solo cuando 'tengo ganas'.",
+    "Me fijo metas de proceso, no solo de resultado.",
+    "Trabajo mi cuerpo incluso fuera de la temporada.",
+    "Celebro los pequeños avances, no solo los grandes logros.",
+    "Soy capaz de jugar bien aunque no esté en mi mejor día.",
+    "Cuando el equipo baja, yo subo mi energía.",
+    "Antes de criticar a un compañero, me pregunto si yo hice lo mismo.",
+    "Tengo palabras clave que uso para activarme o calmarme.",
+    "Acepto que hay factores fuera de mi control.",
+    "Me preparo mentalmente igual que físicamente.",
+  ]},
+  r5:{ qs:[
+    {q:"Estás muy nervioso antes del partido más importante del año. ¿Cuál es tu ancla?",opts:[{dot:"🎵",col:"#A855F7",t:"Una canción o música específica",s:"Ancla auditiva"},{dot:"🧘",col:"#1A5FD4",t:"Una respiración profunda y lenta",s:"Ancla física"},{dot:"💬",col:"#FF6B00",t:"Una frase que me repito",s:"Ancla verbal"},{dot:"📸",col:"#00D46A",t:"Visualizo un momento de éxito",s:"Ancla visual"}]},
+    {q:"Acabás de cometer un error grave. ¿Cómo te reseteas?",opts:[{dot:"🤲",col:"#FF6B00",t:"Un gesto físico (puño, palmada)",s:"Ancla kinestésica"},{dot:"💭",col:"#A855F7",t:"Me digo 'siguiente jugada'",s:"Reset verbal"},{dot:"👀",col:"#1A5FD4",t:"Miro un punto fijo en la cancha",s:"Ancla visual"},{dot:"💪",col:"#00D46A",t:"Recuerdo un momento en que superé algo difícil",s:"Ancla de memoria"}]},
+    {q:"El público está en contra tuyo. ¿Qué usás como escudo?",opts:[{dot:"🎯",col:"#FF6B00",t:"Me foco solo en la pelota",s:"Foco objeto"},{dot:"🤝",col:"#00D46A",t:"Miro a mis compañeros",s:"Ancla social"},{dot:"💬",col:"#A855F7",t:"Me repito: 'esto me hace más fuerte'",s:"Re-encuadre"},{dot:"🧘",col:"#1A5FD4",t:"Bajo el ritmo respiratorio",s:"Regulación fisiológica"}]},
+    {q:"Tu confianza está en su punto más bajo. ¿Qué la activa?",opts:[{dot:"📹",col:"#A855F7",t:"Recordar mi mejor actuación",s:"Memoria de éxito"},{dot:"💬",col:"#FF6B00",t:"Las palabras de alguien que cree en mí",s:"Validación externa"},{dot:"🏋️",col:"#00D46A",t:"Un buen calentamiento físico",s:"Activación corporal"},{dot:"🎯",col:"#1A5FD4",t:"Hacer algo pequeño bien desde el principio",s:"Éxito progresivo"}]},
+    {q:"El partido va muy mal. ¿Qué frena tu caída mental?",opts:[{dot:"🗣",col:"#FF6B00",t:"Hablar con un compañero clave",s:"Apoyo social"},{dot:"🧠",col:"#1A5FD4",t:"Preguntarme: '¿qué puedo controlar ahora?'",s:"Control percibido"},{dot:"💪",col:"#00D46A",t:"Un esfuerzo físico máximo (sprint, salto)",s:"Activación física"},{dot:"🎵",col:"#A855F7",t:"Una canción en mi cabeza",s:"Ancla auditiva interna"}]},
+    {q:"¿Cuál es tu generador de confianza más poderoso?",opts:[{dot:"📈",col:"#FF6B00",t:"Saber que me preparé bien",s:"Confianza por preparación"},{dot:"💬",col:"#A855F7",t:"Que el coach o mis compañeros confíen en mí",s:"Confianza externa"},{dot:"🏆",col:"#00D46A",t:"Haber superado situaciones difíciles antes",s:"Confianza por experiencia"},{dot:"🎯",col:"#1A5FD4",t:"Ejecutar bien la entrada en calor",s:"Confianza por ejecución"}]},
+    {q:"Cuando tu mente quiere rendirse, ¿qué la mantiene en pie?",opts:[{dot:"💬",col:"#FF6B00",t:"Una frase o mantra personal",s:"Ancla cognitiva"},{dot:"🤝",col:"#00D46A",t:"Pensar en mis compañeros o familia",s:"Propósito externo"},{dot:"🔥",col:"#A855F7",t:"El orgullo de no bajar los brazos",s:"Valor personal"},{dot:"🧠",col:"#1A5FD4",t:"Recordar para qué hago todo esto",s:"Propósito profundo"}]},
+    {q:"¿Qué rutina pre-partido te da más seguridad?",opts:[{dot:"🎵",col:"#A855F7",t:"Música específica",s:"Ritual auditivo"},{dot:"🏃",col:"#FF6B00",t:"Calentamiento exacto",s:"Ritual físico"},{dot:"💬",col:"#00D46A",t:"Charla con alguien de confianza",s:"Ritual social"},{dot:"🧘",col:"#1A5FD4",t:"Minutos de silencio y visualización",s:"Ritual mental"}]},
+    {q:"Si pudieras darte una sola frase antes del partido más difícil, ¿cuál sería?",opts:[{dot:"💪",col:"#FF6B00",t:"'Esto es para lo que me preparé'",s:"Preparación"},{dot:"🌊",col:"#1A5FD4",t:"'Soltá y fluí'",s:"Confianza en el proceso"},{dot:"🔥",col:"#A855F7",t:"'Este momento es mío'",s:"Apropiación del momento"},{dot:"🤝",col:"#00D46A",t:"'Mis compañeros me necesitan'",s:"Propósito colectivo"}]},
+    {q:"¿Cuándo sabés que estás en tu mejor estado mental?",opts:[{dot:"🌊",col:"#1A5FD4",t:"Cuando no pienso, solo juego",s:"Estado de flow"},{dot:"😊",col:"#00D46A",t:"Cuando disfruto cada jugada",s:"Disfrute competitivo"},{dot:"💪",col:"#FF6B00",t:"Cuando siento que puedo con todo",s:"Alta confianza"},{dot:"🎯",col:"#A855F7",t:"Cuando el tiempo parece más lento",s:"Percepción alterada"}]},
+  ]},
+  r6:{ qs:[
+    ["¿Error propio?","¿Error del árbitro?"],
+    ["¿Ganar feo?","¿Perder bonito?"],
+    ["¿Confianza excesiva?","¿Duda constante?"],
+    ["¿Entrenamiento perfecto?","¿Partido imperfecto?"],
+    ["¿Liderar callado?","¿Liderar hablando?"],
+    ["¿Miedo a fallar?","¿Miedo a no intentarlo?"],
+    ["¿Foco total?","¿Libertad mental?"],
+    ["¿Lo que sentís?","¿Lo que pensás?"],
+    ["¿Jugar lesionado?","¿Cuidarte y no jugar?"],
+    ["¿Ser el que salva?","¿Ser el que prepara el terreno?"],
+    ["¿Rutina sagrada?","¿Adaptarse a todo?"],
+    ["¿Recordar el error?","¿Borrarlo y seguir?"],
+  ]}
+};
+
+/* ════════ STATE ════════ */
+let G={};
+function resetG(){
+  G={mode:null,single:null,q:0,ti:null,qs:0,
+    r1:{times:[],dec:0},r2:{times:[],dec:0},r3:{times:[],dec:0,foco:0,ruido:0},
+    r4:{times:[],dec:0,green:0,yellow:0,red:0},
+    r5:{times:[],dec:0},r6:{times:[],dec:0}};
+}
+resetG();
+
+/* ════════ SCREENS ════════ */
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ════════ COUNTDOWN ════════ */
+function cd(from,cb){
+  const ov=document.getElementById('cdOverlay'),ne=document.getElementById('cdNum');
+  ov.classList.add('on'); let n=from; ne.textContent=n;
+  const t=setInterval(()=>{
+    n--;
+    if(n<=0){clearInterval(t);ov.classList.remove('on');cb();}
+    else{ne.textContent=n;ne.style.animation='none';void ne.offsetWidth;ne.style.animation='popIn .55s cubic-bezier(.17,.67,.4,1.4)';}
+  },800);
+}
+
+/* ════════ FLOW ════════ */
+function playAll(){resetG();G.mode='all';show('rt1');}
+function playSingle(n){resetG();G.mode='single';G.single=n;show('rt'+n);}
+function resetGame(){resetG();show('splash');}
+function startRound(n){G.q=0;cd(3,()=>{show('r'+n);(['','nextQ1','nextQ2','nextQ3','nextQ4','nextQ5','nextQ6'])[n]();});}
+function afterRound(n){
+  stopT();
+  if(G.mode==='single'){buildSingle(n);show('res'+n);}
+  else{n<6?show('rt'+(n+1)):buildFinal();}
+}
+
+/* ════════ TIMER ════════ */
+function startT(sec,arcId,numId,pulseId,onEnd){
+  stopT();
+  const arc=document.getElementById(arcId),num=document.getElementById(numId),
+        pulse=pulseId?document.getElementById(pulseId):null;
+  const circ=201; let t=sec;
+  arc.style.strokeDashoffset=0; arc.className='t-arc'; num.textContent=t;
+  if(pulse)pulse.style.display='none';
+  G.qs=Date.now();
+  G.ti=setInterval(()=>{
+    t-=.1; arc.style.strokeDashoffset=circ*(1-t/sec);
+    const r=Math.ceil(t); num.textContent=r>0?r:0;
+    if(t<=sec*.5)arc.className='t-arc warn';
+    if(t<=sec*.25){arc.className='t-arc danger';if(pulse)pulse.style.display='block';}
+    if(t<=0){clearInterval(G.ti);onEnd();}
+  },100);
+}
+function stopT(){clearInterval(G.ti);}
+function recT(rk){const e=(Date.now()-G.qs)/1000;G[rk].times.push(e);G[rk].dec++;}
+
+/* ════════ R1 ════════ */
+function nextQ1(){
+  const qs=D.r1.qs; if(G.q>=qs.length){afterRound(1);return;}
+  const q=qs[G.q],tot=qs.length;
+  document.getElementById('r1c').textContent=`${G.q+1}/${tot}`;
+  document.getElementById('r1p').style.width=`${(G.q/tot)*100}%`;
+  document.getElementById('r1q').textContent=q.q;
+  const o=document.getElementById('r1o');o.innerHTML='';
+  q.a.forEach(a=>{const b=document.createElement('button');b.className='btn-answer';b.textContent=a;
+    b.onclick=()=>{stopT();recT('r1');G.q++;nextQ1();};o.appendChild(b);});
+  startT(D.r1.time,'r1a','r1t','r1pu',()=>{recT('r1');G.q++;nextQ1();});
+}
+
+/* ════════ R2 ════════ */
+function nextQ2(){
+  const qs=D.r2.qs; if(G.q>=qs.length){afterRound(2);return;}
+  const q=qs[G.q],tot=qs.length;
+  document.getElementById('r2c').textContent=`${G.q+1}/${tot}`;
+  document.getElementById('r2p').style.width=`${(G.q/tot)*100}%`;
+  const ctx=document.getElementById('r2ctx');
+  if(q.ctx){ctx.style.display='block';ctx.textContent='📍 '+q.ctx;}else ctx.style.display='none';
+  document.getElementById('r2q').textContent=q.q;
+  const o=document.getElementById('r2o');o.innerHTML='';
+  q.a.forEach(a=>{const b=document.createElement('button');b.className='btn-answer';b.textContent=a;
+    b.onclick=()=>{stopT();recT('r2');G.q++;nextQ2();};o.appendChild(b);});
+  startT(D.r2.time,'r2a','r2t','r2pu',()=>{recT('r2');G.q++;nextQ2();});
+}
+
+/* ════════ R3 ════════ */
+function nextQ3(){
+  const qs=D.r3.qs; if(G.q>=qs.length){afterRound(3);return;}
+  const q=qs[G.q],tot=qs.length;
+  document.getElementById('r3c').textContent=`${G.q+1}/${tot}`;
+  document.getElementById('r3p').style.width=`${(G.q/tot)*100}%`;
+  document.getElementById('r3q').textContent=q.q;
+  const o=document.getElementById('r3o');o.innerHTML='';
+  q.opts.forEach(op=>{
+    const d=document.createElement('div');d.className='focus-opt';
+    d.innerHTML=`<div class="fo-icon">${op.icon}</div><div class="fo-text">${op.t}</div><div class="fo-sub">${op.s}</div>`;
+    d.onclick=()=>{recT('r3');
+      const low=op.s.toLowerCase();
+      if(low.includes('foco')||low.includes('reset')||low.includes('flow')||low.includes('calma')||low.includes('auto'))G.r3.foco++;
+      else G.r3.ruido++;
+      G.q++;
+      const el=document.getElementById('r3q');el.classList.add('flash');
+      setTimeout(()=>{el.classList.remove('flash');nextQ3();},280);
+    };
+    o.appendChild(d);
+  });
+  G.qs=Date.now();
+}
+
+/* ════════ R4 ════════ */
+function nextQ4(){
+  const qs=D.r4.qs; if(G.q>=qs.length){afterRound(4);return;}
+  const tot=qs.length;
+  document.getElementById('r4c').textContent=`${G.q+1}/${tot}`;
+  document.getElementById('r4p').style.width=`${(G.q/tot)*100}%`;
+  document.getElementById('r4q').textContent=qs[G.q];
+  G.qs=Date.now();
+}
+function ansSem(c){recT('r4');G.r4[c]++;G.q++;
+  const el=document.getElementById('r4q');el.classList.add('flash');
+  setTimeout(()=>{el.classList.remove('flash');nextQ4();},280);
+}
+
+/* ════════ R5 ════════ */
+function nextQ5(){
+  const qs=D.r5.qs; if(G.q>=qs.length){afterRound(5);return;}
+  const q=qs[G.q],tot=qs.length;
+  document.getElementById('r5c').textContent=`${G.q+1}/${tot}`;
+  document.getElementById('r5p').style.width=`${(G.q/tot)*100}%`;
+  document.getElementById('r5q').textContent=q.q;
+  const o=document.getElementById('r5o');o.innerHTML='';
+  q.opts.forEach(op=>{
+    const b=document.createElement('div');b.className='scale-btn';
+    b.innerHTML=`<div class="scale-dot" style="background:${op.col}20;color:${op.col};border:1.5px solid ${op.col}">${op.dot}</div>
+      <div><div class="scale-text">${op.t}</div><div class="scale-sub">${op.s}</div></div>`;
+    b.onclick=()=>{recT('r5');G.q++;
+      b.style.borderColor=op.col;b.style.background=op.col+'15';
+      setTimeout(()=>nextQ5(),300);};
+    o.appendChild(b);
+  });
+  G.qs=Date.now();
+}
+
+/* ════════ R6 ════════ */
+function nextQ6(){
+  const qs=D.r6.qs; if(G.q>=qs.length){afterRound(6);return;}
+  const tot=qs.length,q=qs[G.q];
+  document.getElementById('r6c').textContent=`${G.q+1}/${tot}`;
+  document.getElementById('r6p').style.width=`${(G.q/tot)*100}%`;
+  const w=document.getElementById('r6dw');w.innerHTML='';
+  const g=document.createElement('div');g.className='duelo-grid';
+  q.forEach(opt=>{
+    const b=document.createElement('button');b.className='btn-duelo';b.textContent=opt;
+    b.onclick=()=>{recT('r6');G.q++;
+      w.style.transition='opacity .2s,transform .2s';w.style.opacity='0';w.style.transform='scale(.94)';
+      setTimeout(()=>{w.style.opacity='1';w.style.transform='';nextQ6();},220);};
+    g.appendChild(b);
+  });
+  const vs=document.createElement('div');vs.className='vs-badge';vs.textContent='VS';
+  g.insertBefore(vs,g.children[1]);
+  w.appendChild(g);w.style.opacity='1';w.style.transform='';w.style.transition='opacity .2s,transform .2s';
+  G.qs=Date.now();
+}
+
+/* ════════ STATS ════════ */
+function calcS(rk){
+  const t=G[rk].times;
+  if(!t.length)return{total:0,avg:'–',fast:0,slow:0};
+  const avg=(t.reduce((a,b)=>a+b,0)/t.length).toFixed(1);
+  return{total:G[rk].dec,avg,fast:t.filter(x=>x<2).length,slow:t.filter(x=>x>4).length};
+}
+function sHTML(s){return`
+  <div class="stat-box"><div class="stat-num">${s.total}</div><div class="stat-lbl">Decisiones</div></div>
+  <div class="stat-box"><div class="stat-num">${s.avg}s</div><div class="stat-lbl">Tiempo promedio</div></div>
+  <div class="stat-box"><div class="stat-num">${s.fast}</div><div class="stat-lbl">Antes de 2 seg</div></div>
+  <div class="stat-box"><div class="stat-num">${s.slow}</div><div class="stat-lbl">Más de 4 seg</div></div>`;}
+function semHTML(g,y,r){return`
+  <div class="sr g"><div class="e">🟢</div><div class="c">${g}</div><div class="n">Lo haría</div></div>
+  <div class="sr y"><div class="e">🟡</div><div class="c">${y}</div><div class="n">Lo pensaría</div></div>
+  <div class="sr r"><div class="e">🔴</div><div class="c">${r}</div><div class="n">No lo haría</div></div>`;}
+
+function buildSingle(n){
+  const mk=(id,html)=>{const el=document.getElementById(id);if(el)el.innerHTML=html;};
+  if(n===4){mk('rs4sem',semHTML(G.r4.green,G.r4.yellow,G.r4.red));}
+  else if(n===3){mk('rs3s',`
+    <div class="stat-box"><div class="stat-num">${G.r3.dec}</div><div class="stat-lbl">Respuestas</div></div>
+    <div class="stat-box"><div class="stat-num">${G.r3.foco}</div><div class="stat-lbl">Foco elegido</div></div>
+    <div class="stat-box"><div class="stat-num">${G.r3.ruido}</div><div class="stat-lbl">Ruido/distracción</div></div>
+    <div class="stat-box"><div class="stat-num">${G.r3.dec>0?Math.round(G.r3.foco/G.r3.dec*100):0}%</div><div class="stat-lbl">Índice de foco</div></div>`);}
+  else{mk('rs'+n+'s',sHTML(calcS('r'+n)));}
+  const btns=document.getElementById('rs'+n+'b');
+  if(btns){btns.innerHTML='';
+    const a=document.createElement('button');a.className='btn btn-primary';a.textContent='🔄 Jugar de nuevo';
+    a.onclick=()=>playSingle(n);btns.appendChild(a);
+    const b=document.createElement('button');b.className='btn btn-ghost';b.textContent='← Menú';
+    b.onclick=resetGame;btns.appendChild(b);}
+}
+
+function buildFinal(){
+  // general
+  const all=[...G.r1.times,...G.r2.times,...G.r3.times,...G.r4.times,...G.r5.times,...G.r6.times];
+  const tot=G.r1.dec+G.r2.dec+G.r3.dec+G.r4.dec+G.r5.dec+G.r6.dec;
+  const avg=all.length?(all.reduce((a,b)=>a+b,0)/all.length).toFixed(1):'–';
+  document.getElementById('fg').innerHTML=`
+    <div class="stat-box"><div class="stat-num">${tot}</div><div class="stat-lbl">Decisiones totales</div></div>
+    <div class="stat-box"><div class="stat-num">${avg}s</div><div class="stat-lbl">Tiempo promedio</div></div>
+    <div class="stat-box"><div class="stat-num">${G.r3.foco}</div><div class="stat-lbl">Foco elegido</div></div>
+    <div class="stat-box"><div class="stat-num">${Math.round(G.r3.foco/(G.r3.dec||1)*100)}%</div><div class="stat-lbl">Índice de foco</div></div>`;
+  document.getElementById('fsem').innerHTML=semHTML(G.r4.green,G.r4.yellow,G.r4.red);
+  // tabs
+  document.getElementById('fr1').innerHTML=sHTML(calcS('r1'));
+  document.getElementById('fr2').innerHTML=sHTML(calcS('r2'));
+  document.getElementById('fr3').innerHTML=`
+    <div class="stat-box"><div class="stat-num">${G.r3.foco}</div><div class="stat-lbl">Foco</div></div>
+    <div class="stat-box"><div class="stat-num">${G.r3.ruido}</div><div class="stat-lbl">Ruido</div></div>
+    <div class="stat-box"><div class="stat-num">${Math.round(G.r3.foco/(G.r3.dec||1)*100)}%</div><div class="stat-lbl">Índice foco</div></div>
+    <div class="stat-box"><div class="stat-num">${G.r3.dec}</div><div class="stat-lbl">Respuestas</div></div>`;
+  document.getElementById('fr4').innerHTML=semHTML(G.r4.green,G.r4.yellow,G.r4.red);
+  document.getElementById('fr5').innerHTML=sHTML(calcS('r5'));
+  document.getElementById('fr6').innerHTML=sHTML(calcS('r6'));
+  show('final');
+}
+
+function switchTab(n){
+  ['g','r1','r2','r3','r4','r5','r6'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display=t===n?'block':'none';});
+  document.querySelectorAll('.tab').forEach((b,i)=>{
+    b.classList.toggle('active',['g','r1','r2','r3','r4','r5','r6'][i]===n);});
+}
+</script>
+</body>
+</html>
