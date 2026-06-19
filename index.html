@@ -341,6 +341,11 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     <div class="prog-top"><span class="tag tag-blue">R03 · Foco o Ruido</span><span id="r3c" style="font-family:var(--fc);font-size:.8rem;color:var(--white-dim)">1/12</span></div>
     <div class="prog-bar"><div class="prog-fill" id="r3p" style="width:0%"></div></div>
   </div>
+  <div class="timer-wrap"><div class="timer-ring">
+    <div class="pulse" id="r3pu"></div>
+    <svg class="timer-svg" width="76" height="76" viewBox="0 0 76 76"><circle class="t-track" cx="38" cy="38" r="32"/><circle class="t-arc" id="r3a" cx="38" cy="38" r="32"/></svg>
+    <div class="t-num" id="r3t">8</div>
+  </div></div>
   <p class="q-text" id="r3q"></p>
   <div class="focus-opts" id="r3o"></div>
 </div>
@@ -351,6 +356,11 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     <div class="prog-top"><span class="tag tag-orange">R04 · Semáforo 2.0</span><span id="r4c" style="font-family:var(--fc);font-size:.8rem;color:var(--white-dim)">1/20</span></div>
     <div class="prog-bar"><div class="prog-fill" id="r4p" style="width:0%"></div></div>
   </div>
+  <div class="timer-wrap"><div class="timer-ring">
+    <div class="pulse" id="r4pu"></div>
+    <svg class="timer-svg" width="76" height="76" viewBox="0 0 76 76"><circle class="t-track" cx="38" cy="38" r="32"/><circle class="t-arc" id="r4a" cx="38" cy="38" r="32"/></svg>
+    <div class="t-num" id="r4t">8</div>
+  </div></div>
   <p class="q-text" id="r4q"></p>
   <div class="sem-wrap">
     <button class="btn-sem bs-green"  onclick="ansSem('green')"><span>🟢</span>LO HARÍA</button>
@@ -365,6 +375,11 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     <div class="prog-top"><span class="tag tag-purple">R05 · Anclas de Seguridad</span><span id="r5c" style="font-family:var(--fc);font-size:.8rem;color:var(--white-dim)">1/10</span></div>
     <div class="prog-bar"><div class="prog-fill" id="r5p" style="width:0%"></div></div>
   </div>
+  <div class="timer-wrap"><div class="timer-ring">
+    <div class="pulse" id="r5pu"></div>
+    <svg class="timer-svg" width="76" height="76" viewBox="0 0 76 76"><circle class="t-track" cx="38" cy="38" r="32"/><circle class="t-arc" id="r5a" cx="38" cy="38" r="32"/></svg>
+    <div class="t-num" id="r5t">8</div>
+  </div></div>
   <p class="q-text" id="r5q"></p>
   <div class="scale-wrap" id="r5o"></div>
 </div>
@@ -375,6 +390,11 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     <div class="prog-top"><span class="tag tag-orange">R06 · Elegí Ya 2.0</span><span id="r6c" style="font-family:var(--fc);font-size:.8rem;color:var(--white-dim)">1/12</span></div>
     <div class="prog-bar"><div class="prog-fill" id="r6p" style="width:0%"></div></div>
   </div>
+  <div class="timer-wrap"><div class="timer-ring">
+    <div class="pulse" id="r6pu"></div>
+    <svg class="timer-svg" width="76" height="76" viewBox="0 0 76 76"><circle class="t-track" cx="38" cy="38" r="32"/><circle class="t-arc" id="r6a" cx="38" cy="38" r="32"/></svg>
+    <div class="t-num" id="r6t">5</div>
+  </div></div>
   <div id="r6dw"></div>
 </div>
 
@@ -518,7 +538,7 @@ const D = {
     {ctx:"Tu mejor amigo del equipo está en racha y vos no.",q:"¿Qué sentís por dentro?",a:["😊 Alegría genuina","😔 Algo de envidia, lo reconozco","🤔 Mezcla de las dos","🔥 Me motiva a mejorar"]},
     {ctx:"Último partido de la temporada.",q:"Sabés que el año que viene podés no estar en este equipo. ¿Eso cómo te afecta hoy?",a:["🔥 Me hace jugar mejor","😔 Me distrae un poco","😶 No pienso en eso ahora","🎯 Foco solo en este partido"]},
   ]},
-  r3:{ qs:[
+  r3:{ time:8, qs:[
     {q:"Estás en la línea de tiro libre. Las tribunas hacen ruido. ¿Tu atención va...?",opts:[{icon:"🎯",t:"Al aro",s:"Foco externo preciso"},{icon:"🧠",t:"A mi rutina",s:"Foco interno"},{icon:"👂",t:"Al ruido",s:"Distracción"},{icon:"💭",t:"A lo que puede pasar",s:"Pensamiento futuro"}]},
     {q:"Tu rival acaba de hacer un gran jugada contra vos. ¿Tu mente va...?",opts:[{icon:"🔄",t:"A la siguiente jugada",s:"Reset inmediato"},{icon:"😤",t:"A la bronca",s:"Emoción reactiva"},{icon:"🤔",t:"A entender qué pasó",s:"Análisis"},{icon:"😶",t:"A ningún lado, se congela",s:"Bloqueo mental"}]},
     {q:"El entrenador te critica en el tiempo muerto. ¿Tu foco va...?",opts:[{icon:"📌",t:"A corregir lo que dijo",s:"Receptivo y ejecutivo"},{icon:"😤",t:"A defenderme",s:"Ego activado"},{icon:"😳",t:"A lo que pensarán otros",s:"Imagen social"},{icon:"🧘",t:"A mantenerme calmo",s:"Autorregulación"}]},
@@ -532,29 +552,29 @@ const D = {
     {q:"Después de un error, ¿cuánto tarda tu mente en volver al presente?",opts:[{icon:"⚡",t:"Casi instantáneo",s:"Reset rápido"},{icon:"🕐",t:"Una o dos jugadas",s:"Reset normal"},{icon:"⏱",t:"Varios minutos",s:"Cuesta volver"},{icon:"😔",t:"A veces no vuelvo",s:"Dificultad de soltar"}]},
     {q:"¿Cuándo sentís que estás más 'en el partido'?",opts:[{icon:"🔥",t:"Cuando el partido aprieta",s:"Foco competitivo"},{icon:"🌊",t:"Cuando el juego fluye solo",s:"Estado de flow"},{icon:"💪",t:"Cuando siento que soy clave",s:"Rol protagónico"},{icon:"🤝",t:"Cuando el equipo está unido",s:"Cohesión grupal"}]},
   ]},
-  r4:{ qs:[
-    "Visualizo el partido antes de jugarlo.",
-    "Tengo una rutina pre-partido fija.",
-    "Cuando cometo un error, lo suelto en menos de 10 segundos.",
-    "Me hablo positivo durante el partido.",
-    "Cuido mi sueño como parte del entrenamiento.",
-    "Estudio a mis rivales antes de enfrentarlos.",
-    "Pido feedback aunque duela escucharlo.",
-    "Llevo un diario de rendimiento.",
-    "Practico la respiración como herramienta de regulación.",
-    "Cuando perdemos, busco mi parte de responsabilidad.",
-    "Entreno con la misma intensidad siempre, no solo cuando 'tengo ganas'.",
-    "Me fijo metas de proceso, no solo de resultado.",
-    "Trabajo mi cuerpo incluso fuera de la temporada.",
-    "Celebro los pequeños avances, no solo los grandes logros.",
-    "Soy capaz de jugar bien aunque no esté en mi mejor día.",
-    "Cuando el equipo baja, yo subo mi energía.",
-    "Antes de criticar a un compañero, me pregunto si yo hice lo mismo.",
-    "Tengo palabras clave que uso para activarme o calmarme.",
-    "Acepto que hay factores fuera de mi control.",
-    "Me preparo mentalmente igual que físicamente.",
+  r4:{ time:8, qs:[
+    "Visualizar el partido completo antes de jugarlo.",
+    "Armar una rutina pre-partido fija y respetarla siempre.",
+    "Soltar un error en menos de 10 segundos y seguir jugando.",
+    "Hablarme en positivo durante todo el partido, aunque vaya perdiendo.",
+    "Cuidar mi sueño como parte del entrenamiento, todos los días.",
+    "Estudiar el video de mis rivales antes de cada partido importante.",
+    "Pedir feedback a mi entrenador aunque sepa que va a doler.",
+    "Llevar un diario de rendimiento después de cada partido.",
+    "Practicar la respiración como herramienta para regularme.",
+    "Buscar mi parte de responsabilidad cada vez que perdemos.",
+    "Entrenar con la misma intensidad todos los días, tenga ganas o no.",
+    "Fijarme metas de proceso, no solo de resultado.",
+    "Trabajar mi cuerpo incluso fuera de la temporada de competencia.",
+    "Celebrar los pequeños avances, no solo los grandes logros.",
+    "Jugar bien aunque no sea mi mejor día físico o mental.",
+    "Subir mi energía cuando el equipo está bajoneado.",
+    "Preguntarme si yo hice lo mismo antes de criticar a un compañero.",
+    "Usar una palabra clave para activarme o calmarme en el partido.",
+    "Aceptar en el momento que hay factores fuera de mi control.",
+    "Prepararme mentalmente con la misma seriedad que físicamente.",
   ]},
-  r5:{ qs:[
+  r5:{ time:8, qs:[
     {q:"Estás muy nervioso antes del partido más importante del año. ¿Cuál es tu ancla?",opts:[{dot:"🎵",col:"#A855F7",t:"Una canción o música específica",s:"Ancla auditiva"},{dot:"🧘",col:"#1A5FD4",t:"Una respiración profunda y lenta",s:"Ancla física"},{dot:"💬",col:"#FF6B00",t:"Una frase que me repito",s:"Ancla verbal"},{dot:"📸",col:"#00D46A",t:"Visualizo un momento de éxito",s:"Ancla visual"}]},
     {q:"Acabás de cometer un error grave. ¿Cómo te reseteas?",opts:[{dot:"🤲",col:"#FF6B00",t:"Un gesto físico (puño, palmada)",s:"Ancla kinestésica"},{dot:"💭",col:"#A855F7",t:"Me digo 'siguiente jugada'",s:"Reset verbal"},{dot:"👀",col:"#1A5FD4",t:"Miro un punto fijo en la cancha",s:"Ancla visual"},{dot:"💪",col:"#00D46A",t:"Recuerdo un momento en que superé algo difícil",s:"Ancla de memoria"}]},
     {q:"El público está en contra tuyo. ¿Qué usás como escudo?",opts:[{dot:"🎯",col:"#FF6B00",t:"Me foco solo en la pelota",s:"Foco objeto"},{dot:"🤝",col:"#00D46A",t:"Miro a mis compañeros",s:"Ancla social"},{dot:"💬",col:"#A855F7",t:"Me repito: 'esto me hace más fuerte'",s:"Re-encuadre"},{dot:"🧘",col:"#1A5FD4",t:"Bajo el ritmo respiratorio",s:"Regulación fisiológica"}]},
@@ -566,7 +586,7 @@ const D = {
     {q:"Si pudieras darte una sola frase antes del partido más difícil, ¿cuál sería?",opts:[{dot:"💪",col:"#FF6B00",t:"'Esto es para lo que me preparé'",s:"Preparación"},{dot:"🌊",col:"#1A5FD4",t:"'Soltá y fluí'",s:"Confianza en el proceso"},{dot:"🔥",col:"#A855F7",t:"'Este momento es mío'",s:"Apropiación del momento"},{dot:"🤝",col:"#00D46A",t:"'Mis compañeros me necesitan'",s:"Propósito colectivo"}]},
     {q:"¿Cuándo sabés que estás en tu mejor estado mental?",opts:[{dot:"🌊",col:"#1A5FD4",t:"Cuando no pienso, solo juego",s:"Estado de flow"},{dot:"😊",col:"#00D46A",t:"Cuando disfruto cada jugada",s:"Disfrute competitivo"},{dot:"💪",col:"#FF6B00",t:"Cuando siento que puedo con todo",s:"Alta confianza"},{dot:"🎯",col:"#A855F7",t:"Cuando el tiempo parece más lento",s:"Percepción alterada"}]},
   ]},
-  r6:{ qs:[
+  r6:{ time:5, qs:[
     ["¿Error propio?","¿Error del árbitro?"],
     ["¿Ganar feo?","¿Perder bonito?"],
     ["¿Confianza excesiva?","¿Duda constante?"],
@@ -677,20 +697,22 @@ function nextQ3(){
   document.getElementById('r3p').style.width=`${(G.q/tot)*100}%`;
   document.getElementById('r3q').textContent=q.q;
   const o=document.getElementById('r3o');o.innerHTML='';
+  const pick=(op)=>{
+    stopT();recT('r3');
+    const low=op.s.toLowerCase();
+    if(low.includes('foco')||low.includes('reset')||low.includes('flow')||low.includes('calma')||low.includes('auto'))G.r3.foco++;
+    else G.r3.ruido++;
+    G.q++;
+    const el=document.getElementById('r3q');el.classList.add('flash');
+    setTimeout(()=>{el.classList.remove('flash');nextQ3();},280);
+  };
   q.opts.forEach(op=>{
     const d=document.createElement('div');d.className='focus-opt';
     d.innerHTML=`<div class="fo-icon">${op.icon}</div><div class="fo-text">${op.t}</div><div class="fo-sub">${op.s}</div>`;
-    d.onclick=()=>{recT('r3');
-      const low=op.s.toLowerCase();
-      if(low.includes('foco')||low.includes('reset')||low.includes('flow')||low.includes('calma')||low.includes('auto'))G.r3.foco++;
-      else G.r3.ruido++;
-      G.q++;
-      const el=document.getElementById('r3q');el.classList.add('flash');
-      setTimeout(()=>{el.classList.remove('flash');nextQ3();},280);
-    };
+    d.onclick=()=>pick(op);
     o.appendChild(d);
   });
-  G.qs=Date.now();
+  startT(D.r3.time,'r3a','r3t','r3pu',()=>pick(q.opts[Math.floor(Math.random()*q.opts.length)]));
 }
 
 /* ════════ R4 ════════ */
@@ -700,9 +722,9 @@ function nextQ4(){
   document.getElementById('r4c').textContent=`${G.q+1}/${tot}`;
   document.getElementById('r4p').style.width=`${(G.q/tot)*100}%`;
   document.getElementById('r4q').textContent=qs[G.q];
-  G.qs=Date.now();
+  startT(D.r4.time,'r4a','r4t','r4pu',()=>ansSem('yellow'));
 }
-function ansSem(c){recT('r4');G.r4[c]++;G.q++;
+function ansSem(c){stopT();recT('r4');G.r4[c]++;G.q++;
   const el=document.getElementById('r4q');el.classList.add('flash');
   setTimeout(()=>{el.classList.remove('flash');nextQ4();},280);
 }
@@ -715,16 +737,19 @@ function nextQ5(){
   document.getElementById('r5p').style.width=`${(G.q/tot)*100}%`;
   document.getElementById('r5q').textContent=q.q;
   const o=document.getElementById('r5o');o.innerHTML='';
+  const pick=(b,op)=>{
+    stopT();recT('r5');G.q++;
+    if(b&&b.style){b.style.borderColor=op.col;b.style.background=op.col+'15';}
+    setTimeout(()=>nextQ5(),300);
+  };
   q.opts.forEach(op=>{
     const b=document.createElement('div');b.className='scale-btn';
     b.innerHTML=`<div class="scale-dot" style="background:${op.col}20;color:${op.col};border:1.5px solid ${op.col}">${op.dot}</div>
       <div><div class="scale-text">${op.t}</div><div class="scale-sub">${op.s}</div></div>`;
-    b.onclick=()=>{recT('r5');G.q++;
-      b.style.borderColor=op.col;b.style.background=op.col+'15';
-      setTimeout(()=>nextQ5(),300);};
+    b.onclick=()=>pick(b,op);
     o.appendChild(b);
   });
-  G.qs=Date.now();
+  startT(D.r5.time,'r5a','r5t','r5pu',()=>pick(null,q.opts[Math.floor(Math.random()*q.opts.length)]));
 }
 
 /* ════════ R6 ════════ */
@@ -735,17 +760,20 @@ function nextQ6(){
   document.getElementById('r6p').style.width=`${(G.q/tot)*100}%`;
   const w=document.getElementById('r6dw');w.innerHTML='';
   const g=document.createElement('div');g.className='duelo-grid';
+  const pick=()=>{
+    stopT();recT('r6');G.q++;
+    w.style.transition='opacity .2s,transform .2s';w.style.opacity='0';w.style.transform='scale(.94)';
+    setTimeout(()=>{w.style.opacity='1';w.style.transform='';nextQ6();},220);
+  };
   q.forEach(opt=>{
     const b=document.createElement('button');b.className='btn-duelo';b.textContent=opt;
-    b.onclick=()=>{recT('r6');G.q++;
-      w.style.transition='opacity .2s,transform .2s';w.style.opacity='0';w.style.transform='scale(.94)';
-      setTimeout(()=>{w.style.opacity='1';w.style.transform='';nextQ6();},220);};
+    b.onclick=pick;
     g.appendChild(b);
   });
   const vs=document.createElement('div');vs.className='vs-badge';vs.textContent='VS';
   g.insertBefore(vs,g.children[1]);
   w.appendChild(g);w.style.opacity='1';w.style.transform='';w.style.transition='opacity .2s,transform .2s';
-  G.qs=Date.now();
+  startT(D.r6.time,'r6a','r6t','r6pu',pick);
 }
 
 /* ════════ STATS ════════ */
